@@ -1,8 +1,13 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { modalState } from "../atoms/modalAtom";
 import Banner from "../components/banner";
 import Header from "../components/header";
+import Modal from "../components/modal";
 import Row from "../components/row";
+import useAuth from "../hooks/use-auth";
 import { Movie } from "../typings";
 import requests from "../utils/requests";
 
@@ -27,6 +32,11 @@ const Home = ({
   romanceMovies,
   documentaries,
 }: Props) => {
+  const { loading } = useAuth();
+  const showModal = useRecoilValue(modalState);
+
+  if (loading) return null;
+
   return (
     <div className="relative h-screen bg-gradient-to-b lg:h-[140vh]">
       <Head>
@@ -44,12 +54,12 @@ const Home = ({
           {/* My List Component Here */}
           {/* <Row title="My List" movies={list}/> */}
           <Row title="Comedies" movies={comedyMovies} />
-          <Row title="Horrors" movies={horrorMovies} />
-          <Row title="Romances" movies={romanceMovies} />
+          <Row title="Scary Movies" movies={horrorMovies} />
+          <Row title="Romances Movies" movies={romanceMovies} />
           <Row title="Documentaries" movies={documentaries} />
         </section>
       </main>
-      {/* Modal */}
+      {showModal && <Modal />}
     </div>
   );
 };
